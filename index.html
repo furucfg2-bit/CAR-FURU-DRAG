@@ -38,11 +38,12 @@ body { background:var(--d); color:#fff; font-family:'Rajdhani',sans-serif; overf
 .car-selector { display:flex; gap:6px; padding:8px 10px; overflow-x:auto; width:100%; justify-content:center; flex-shrink:0; }
 .car-selector::-webkit-scrollbar { height:4px; }
 .car-selector::-webkit-scrollbar-thumb { background:#333; border-radius:2px; }
-.car-thumb { min-width:90px; height:60px; background:var(--c); border:2px solid var(--b); border-radius:10px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.7rem; transition:all 0.3s; padding:4px 6px; text-align:center; flex-shrink:0; }
+.car-thumb { min-width:90px; height:60px; background:var(--c); border:2px solid var(--b); border-radius:10px; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.7rem; transition:all 0.3s; padding:4px 6px; text-align:center; flex-shrink:0; position:relative; }
 .car-thumb:hover { border-color:var(--p); }
 .car-thumb.active { border-color:var(--p); background:rgba(255,42,42,0.1); box-shadow:0 0 15px var(--pg); }
 .car-thumb .thumb-brand { font-weight:700; font-size:0.75rem; }
 .car-thumb .thumb-model { font-size:0.6rem; color:#888; }
+.car-thumb .thumb-lock { position:absolute; top:2px; right:4px; font-size:0.7rem; }
 .car-stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; width:100%; padding:8px 10px; flex-shrink:0; }
 .stat-box { background:var(--c); border:1px solid var(--b); border-radius:8px; padding:8px 4px; text-align:center; transition:all 0.3s; }
 .stat-box:hover { border-color:rgba(255,255,255,0.15); }
@@ -62,6 +63,9 @@ body { background:var(--d); color:#fff; font-family:'Rajdhani',sans-serif; overf
 .upgrade-btn { width:100%; padding:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,42,42,0.4); color:var(--p); cursor:pointer; font-family:'Orbitron',sans-serif; font-size:0.7rem; border-radius:8px; transition:all 0.3s; font-weight:700; }
 .upgrade-btn:hover { background:rgba(255,42,42,0.1); }
 .upgrade-btn:disabled { opacity:0.3; cursor:not-allowed; border-color:#444; color:#555; }
+.buy-btn { width:100%; padding:10px; background:linear-gradient(180deg,var(--p),#aa0000); border:none; color:#fff; cursor:pointer; font-family:'Orbitron',sans-serif; font-size:0.85rem; border-radius:10px; transition:all 0.3s; font-weight:700; margin-top:8px; }
+.buy-btn:hover { filter:brightness(1.2); }
+.buy-btn:disabled { opacity:0.4; cursor:not-allowed; filter:grayscale(1); }
 #raceScreen { background:var(--d); flex-direction:column; }
 .race-hud { display:flex; justify-content:space-between; align-items:center; padding:8px 15px; background:rgba(0,0,0,0.6); border-bottom:1px solid var(--b); backdrop-filter:blur(10px); z-index:10; gap:8px; min-height:45px; }
 .hud-block { text-align:center; min-width:50px; }
@@ -139,11 +143,24 @@ body { background:var(--d); color:#fff; font-family:'Rajdhani',sans-serif; overf
 .tut-num { width:28px; height:28px; background:rgba(255,42,42,0.15); border:1px solid rgba(255,42,42,0.4); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--p); flex-shrink:0; font-size:0.8rem; }
 .tut-text { color:#aaa; line-height:1.5; font-size:0.85rem; padding-top:2px; }
 .tut-key { display:inline-block; padding:2px 8px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:4px; color:var(--p); font-weight:700; font-size:0.75rem; margin:0 2px; }
+.ach-overlay { display:none; position:absolute; inset:0; background:rgba(0,0,0,0.92); z-index:300; align-items:center; justify-content:center; padding:15px; }
+.ach-overlay.active { display:flex; }
+.ach-card { max-width:500px; background:var(--c); border:1px solid var(--b); border-radius:16px; padding:25px; width:100%; max-height:85vh; overflow-y:auto; }
+.ach-card h2 { color:var(--g); margin-bottom:18px; font-size:1.3rem; font-family:'Russo One',sans-serif; text-align:center; }
+.ach-item { display:flex; align-items:center; gap:12px; padding:10px; background:rgba(255,255,255,0.02); border-radius:10px; border:1px solid var(--b); margin-bottom:8px; transition:all 0.3s; }
+.ach-item.unlocked { border-color:rgba(255,215,0,0.3); background:rgba(255,215,0,0.05); }
+.ach-icon { font-size:1.5rem; width:40px; text-align:center; }
+.ach-info { flex:1; }
+.ach-name { font-size:0.9rem; font-weight:700; color:#fff; }
+.ach-desc { font-size:0.7rem; color:#888; margin-top:2px; }
+.ach-status { font-size:0.7rem; color:var(--g); font-family:'Orbitron',sans-serif; }
 .loading-overlay { position:fixed; inset:0; background:#000; z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:15px; }
 .loading-overlay.hidden { display:none; }
 .spinner { width:50px; height:50px; border:3px solid rgba(255,42,42,0.2); border-top-color:#ff2a2a; border-radius:50%; animation:spin 1s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .loading-text { font-family:'Orbitron',sans-serif; font-size:0.8rem; color:#888; letter-spacing:3px; }
+.toast { position:fixed; top:80px; left:50%; transform:translateX(-50%) translateY(-20px); background:rgba(0,0,0,0.85); border:1px solid var(--p); color:var(--p); padding:10px 20px; border-radius:30px; font-family:'Orbitron',sans-serif; font-size:0.8rem; opacity:0; pointer-events:none; transition:all 0.4s; z-index:5000; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 @media (max-width:700px) { .garage-content { flex-direction:column; } .upgrades-panel { width:100%; max-height:200px; } .car-stats-grid { grid-template-columns:repeat(3,1fr); } .race-controls { padding:8px 10px; gap:6px; min-height:90px; } .action-btn { min-height:60px; font-size:0.65rem; border-radius:10px; } .btn-sub { display:none; } .gear-num { font-size:1.8rem; } .speed-val { font-size:1.2rem; } .gauge-canvas { width:80px; height:45px; } .hud-value { font-size:0.85rem; } .settings-card { padding:20px 15px; } }
 @media (max-width:400px) { .action-btn { font-size:0.6rem; min-height:55px; } .gear-num { font-size:1.5rem; } .car-selector { gap:4px; } .car-thumb { min-width:65px; height:48px; } }
 </style>
@@ -155,6 +172,8 @@ body { background:var(--d); color:#fff; font-family:'Rajdhani',sans-serif; overf
   <div class="loading-text" id="loadingText">LOADING CARS...</div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <!-- ===== MAIN MENU ===== -->
 <div id="menuScreen" class="screen active">
     <canvas class="menu-bg-canvas" id="menuBgCanvas"></canvas>
@@ -164,10 +183,11 @@ body { background:var(--d); color:#fff; font-family:'Rajdhani',sans-serif; overf
         <div class="game-tagline" id="menuTagline">Street Racing Legends</div>
         <button class="menu-btn" onclick="startRace()"><span>🏁</span> <span id="btnRace">Начать гонку</span></button>
         <button class="menu-btn" onclick="openGarage()"><span>🔧</span> <span id="btnGarage">Гараж</span></button>
+        <button class="menu-btn" onclick="openAchievements()"><span>🏆</span> <span id="btnAchievements">Достижения</span></button>
         <button class="menu-btn" onclick="openSettings()"><span>⚙️</span> <span id="btnSettings">Настройки</span></button>
         <button class="menu-btn" onclick="showTutorial()"><span>📖</span> <span id="btnTutorial">Как играть</span></button>
     </div>
-    <div class="version-tag">TEXTURE EDITION v5.0</div>
+    <div class="version-tag">PROCEDURAL EDITION v6.0</div>
 </div>
 
 <!-- ===== GARAGE ===== -->
@@ -188,6 +208,9 @@ body { background:var(--d); color:#fff; font-family:'Rajdhani',sans-serif; overf
                 <div class="stat-box"><div class="stat-box-label" id="lblAccel">0-100</div><div class="stat-box-value" id="statAccel">4.2</div></div>
                 <div class="stat-box"><div class="stat-box-label" id="lblTopSpeed">Макс. скор.</div><div class="stat-box-value" id="statTopSpeed">260</div></div>
                 <div class="stat-box"><div class="stat-box-label" id="lblGrip">Сцепление</div><div class="stat-box-value" id="statGrip">72%</div></div>
+            </div>
+            <div id="buySection" style="width:100%;padding:0 10px 10px;display:none;">
+                <button class="buy-btn" id="buyBtn" onclick="buyCar()">Купить — 5000💰</button>
             </div>
         </div>
         <div class="upgrades-panel">
@@ -324,16 +347,25 @@ body { background:var(--d); color:#fff; font-family:'Rajdhani',sans-serif; overf
     </div>
 </div>
 
+<!-- ===== ACHIEVEMENTS ===== -->
+<div class="ach-overlay" id="achievementsOverlay">
+    <div class="ach-card">
+        <h2 id="achTitle">🏆 ДОСТИЖЕНИЯ</h2>
+        <div id="achList"></div>
+        <button class="menu-btn" onclick="hideAchievements()" style="margin-top:15px;max-width:280px;" id="btnAchBack">← Назад</button>
+    </div>
+</div>
+
 <script>
 // ======================= LOCALIZATION =======================
 const I18N = {
   ru: {
     menuTagline: "Легенды уличных гонок",
-    btnRace: "Начать гонку", btnGarage: "Гараж", btnSettings: "Настройки", btnTutorial: "Как играть",
+    btnRace: "Начать гонку", btnGarage: "Гараж", btnSettings: "Настройки", btnTutorial: "Как играть", btnAchievements: "Достижения",
     garageTitle: "🔧 ГАРАЖ", btnBack: "← Назад",
     lblPower:"Мощность", lblWeight:"Вес", lblGears:"Передачи", lblAccel:"0-100", lblTopSpeed:"Макс. скор.", lblGrip:"Сцепление",
     upEngine:"Двигатель", upTrans:"Трансмиссия", upTire:"Шины", upWeight:"Облегчение", upNitro:"Нитро",
-    upgradeImpr:"Улучшить", upgradeCost:"💰",
+    upgradeImpr:"Улучшить", upgradeCost:"💰", buyCar:"Купить", buyLocked:"🔒 Недоступно",
     hudTimeLabel:"Время", hudDistLabel:"Дистанция", hudRPMLabel:"Обороты", hudOppLabel:"Соперник",
     lblTach:"Тахометр", lblGear:"Передача", txtStart:"СТАРТ", txtShift:"SHIFT", lblKmh:"км/ч",
     resTimeLabel:"Время", resSpeedLabel:"Финальная скорость", resOppLabel:"Соперник", resReactLabel:"Реакция", resGearLabel:"Лучшая передача",
@@ -345,20 +377,30 @@ const I18N = {
     lblSound:"🔊 Звук", lblVibro:"📳 Вибрация", lblBright:"🎨 Яркость", btnBackSettings:"← Назад в меню",
     tutTitle:"🏁 КАК ИГРАТЬ",
     tutStep1:"Нажмите СТАРТ когда загорится зелёный свет. Раньше — фальстарт, позже — проигрыш в реакции!",
-    tutStep2:"Когда тахометр в красной зоне (7000+ RPM) — нажмите SHIFT! Идеальная переключение даёт бонус скорости.",
+    tutStep2:"Когда тахометр в красной зоне (7000+ RPM) — нажмите SHIFT! Идеальное переключение даёт бонус скорости.",
     tutStep3:"NITRO даёт мощный буст. Перезаряжается между гонками. Используйте на длинных прямых!",
     tutStep4:"Апгрейдите машину в гараже, выбирайте локации и сложность. Чем выше сложность — тем больше награда!",
     btnTutOk:"Понятно!",
     resWin:"ПОБЕДА!", resLose:"ПОРАЖЕНИЕ", resFalse:"ФАЛЬСТАРТ",
-    raceDistM:"м", loadingText:"ЗАГРУЗКА МАШИН..."
+    raceDistM:"м", loadingText:"ЗАГРУЗКА МАШИН...",
+    achTitle:"🏆 ДОСТИЖЕНИЯ", btnAchBack:"← Назад",
+    ach1:"Первая победа", ach1desc:"Выиграйте первую гонку",
+    ach2:"Скоростной демон", ach2desc:"Разгонитесь до 300 км/ч",
+    ach3:"Идеальная реакция", ach3desc:"Стартуйте с реакцией < 0.2с",
+    ach4:"Миллионер", ach4desc:"Накопите 50 000💰",
+    ach5:"Мастер переключений", ach5desc:"Сделайте 50 идеальных переключений",
+    ach6:"Под 10 секунд", ach6desc:"Пройдите 402м быстрее 10 секунд",
+    ach7:"Коллекционер", ach7desc:"Купите все машины",
+    ach8:"Экстремал", ach8desc:"Выиграйте на сложности Экстрим",
+    achLocked:"Заблокировано", achUnlocked:"Разблокировано!"
   },
   en: {
     menuTagline: "Street Racing Legends",
-    btnRace: "Start Race", btnGarage: "Garage", btnSettings: "Settings", btnTutorial: "How to Play",
+    btnRace: "Start Race", btnGarage: "Garage", btnSettings: "Settings", btnTutorial: "How to Play", btnAchievements: "Achievements",
     garageTitle: "🔧 GARAGE", btnBack: "← Back",
     lblPower:"Power", lblWeight:"Weight", lblGears:"Gears", lblAccel:"0-100", lblTopSpeed:"Top Speed", lblGrip:"Grip",
     upEngine:"Engine", upTrans:"Transmission", upTire:"Tires", upWeight:"Weight Red.", upNitro:"Nitro",
-    upgradeImpr:"Upgrade", upgradeCost:"💰",
+    upgradeImpr:"Upgrade", upgradeCost:"💰", buyCar:"Buy", buyLocked:"🔒 Locked",
     hudTimeLabel:"Time", hudDistLabel:"Distance", hudRPMLabel:"RPM", hudOppLabel:"Opponent",
     lblTach:"Tachometer", lblGear:"Gear", txtStart:"START", txtShift:"SHIFT", lblKmh:"km/h",
     resTimeLabel:"Time", resSpeedLabel:"Final Speed", resOppLabel:"Opponent", resReactLabel:"Reaction", resGearLabel:"Best Gear",
@@ -375,15 +417,25 @@ const I18N = {
     tutStep4:"Upgrade your car in garage, pick locations and difficulty. Higher difficulty = bigger reward!",
     btnTutOk:"Got it!",
     resWin:"VICTORY!", resLose:"DEFEAT", resFalse:"FALSE START",
-    raceDistM:"m", loadingText:"LOADING CARS..."
+    raceDistM:"m", loadingText:"LOADING CARS...",
+    achTitle:"🏆 ACHIEVEMENTS", btnAchBack:"← Back",
+    ach1:"First Victory", ach1desc:"Win your first race",
+    ach2:"Speed Demon", ach2desc:"Reach 300 km/h",
+    ach3:"Perfect Reaction", ach3desc:"Launch with reaction < 0.2s",
+    ach4:"Millionaire", ach4desc:"Earn 50,000💰",
+    ach5:"Shift Master", ach5desc:"Make 50 perfect shifts",
+    ach6:"Under 10s", ach6desc:"Complete 402m under 10 seconds",
+    ach7:"Collector", ach7desc:"Buy all cars",
+    ach8:"Extremist", ach8desc:"Win on Extreme difficulty",
+    achLocked:"Locked", achUnlocked:"Unlocked!"
   },
   uk: {
     menuTagline: "Легенди вуличних перегонів",
-    btnRace: "Почати гонку", btnGarage: "Гараж", btnSettings: "Налаштування", btnTutorial: "Як грати",
+    btnRace: "Почати гонку", btnGarage: "Гараж", btnSettings: "Налаштування", btnTutorial: "Як грати", btnAchievements: "Досягнення",
     garageTitle: "🔧 ГАРАЖ", btnBack: "← Назад",
     lblPower:"Потужність", lblWeight:"Вага", lblGears:"Передачі", lblAccel:"0-100", lblTopSpeed:"Макс. швидк.", lblGrip:"Зчеплення",
     upEngine:"Двигун", upTrans:"Трансмісія", upTire:"Шини", upWeight:"Зваження", upNitro:"Нітро",
-    upgradeImpr:"Покращити", upgradeCost:"💰",
+    upgradeImpr:"Покращити", upgradeCost:"💰", buyCar:"Купити", buyLocked:"🔒 Недоступно",
     hudTimeLabel:"Час", hudDistLabel:"Дистанція", hudRPMLabel:"Обороти", hudOppLabel:"Суперник",
     lblTach:"Тахометр", lblGear:"Передача", txtStart:"СТАРТ", txtShift:"SHIFT", lblKmh:"км/год",
     resTimeLabel:"Час", resSpeedLabel:"Фінальна швидкість", resOppLabel:"Суперник", resReactLabel:"Реакція", resGearLabel:"Найкраща передача",
@@ -400,15 +452,25 @@ const I18N = {
     tutStep4:"Апгрейдьте машину в гаражі, обирайте локації та складність. Чим вища складність — тим більша нагорода!",
     btnTutOk:"Зрозуміло!",
     resWin:"ПЕРЕМОГА!", resLose:"ПОРАЗКА", resFalse:"ФАЛЬСТАРТ",
-    raceDistM:"м", loadingText:"ЗАВАНТАЖЕННЯ МАШИН..."
+    raceDistM:"м", loadingText:"ЗАВАНТАЖЕННЯ МАШИН...",
+    achTitle:"🏆 ДОСЯГНЕННЯ", btnAchBack:"← Назад",
+    ach1:"Перша перемога", ach1desc:"Виграйте першу гонку",
+    ach2:"Швидкісний демон", ach2desc:"Розганіться до 300 км/год",
+    ach3:"Ідеальна реакція", ach3desc:"Стартуйте з реакцією < 0.2с",
+    ach4:"Мільйонер", ach4desc:"Накопичте 50 000💰",
+    ach5:"Майстер перемикань", ach5desc:"Зробіть 50 ідеальних перемикань",
+    ach6:"Під 10 секунд", ach6desc:"Пройдіть 402м швидше 10 секунд",
+    ach7:"Колекціонер", ach7desc:"Купіть всі машини",
+    ach8:"Екстремал", ach8desc:"Виграйте на складності Екстрим",
+    achLocked:"Заблоковано", achUnlocked:"Розблоковано!"
   },
   be: {
     menuTagline: "Легенды вулічных гонак",
-    btnRace: "Пачаць гонку", btnGarage: "Гараж", btnSettings: "Налады", btnTutorial: "Як гуляць",
+    btnRace: "Пачаць гонку", btnGarage: "Гараж", btnSettings: "Налады", btnTutorial: "Як гуляць", btnAchievements: "Дасягненні",
     garageTitle: "🔧 ГАРАЖ", btnBack: "← Назад",
     lblPower:"Магутнасць", lblWeight:"Вага", lblGears:"Перадачы", lblAccel:"0-100", lblTopSpeed:"Макс. хутк.", lblGrip:"Зчапленне",
     upEngine:"Рухавік", upTrans:"Трансмісія", upTire:"Шыны", upWeight:"Зважванне", upNitro:"Нітра",
-    upgradeImpr:"Палепшыць", upgradeCost:"💰",
+    upgradeImpr:"Палепшыць", upgradeCost:"💰", buyCar:"Купіць", buyLocked:"🔒 Недаступна",
     hudTimeLabel:"Час", hudDistLabel:"Дыстанцыя", hudRPMLabel:"Абароты", hudOppLabel:"Супернік",
     lblTach:"Тахометр", lblGear:"Перадача", txtStart:"СТАРТ", txtShift:"SHIFT", lblKmh:"км/г",
     resTimeLabel:"Час", resSpeedLabel:"Фінальная хуткасць", resOppLabel:"Супернік", resReactLabel:"Рэакцыя", resGearLabel:"Лепшая перадача",
@@ -425,7 +487,17 @@ const I18N = {
     tutStep4:"Апгрэйдзце машыну ў гаражы, выбірайце лакацыі і складанасць. Чым вышэй складанасць — тым большая ўзнагарода!",
     btnTutOk:"Зразумела!",
     resWin:"ПЕРАМОГА!", resLose:"ПРАЙГРЫШ", resFalse:"ФАЛЬСТАРТ",
-    raceDistM:"м", loadingText:"ЗАГРУЗКА МАШЫН..."
+    raceDistM:"м", loadingText:"ЗАГРУЗКА МАШЫН...",
+    achTitle:"🏆 ДАСЯГНЕННІ", btnAchBack:"← Назад",
+    ach1:"Першая перамога", ach1desc:"Выйграйце першую гонку",
+    ach2:"Хуткасны дэмён", ach2desc:"Разганіцеся да 300 км/г",
+    ach3:"Ідэальная рэакцыя", ach3desc:"Стартуйце з рэакцыяй < 0.2с",
+    ach4:"Мільянер", ach4desc:"Накапіце 50 000💰",
+    ach5:"Майстар пераключэнняў", ach5desc:"Зрабіце 50 ідэальных пераключэнняў",
+    ach6:"Пад 10 секунд", ach6desc:"Прайдзіце 402м хутчэй 10 секунд",
+    ach7:"Калекцыянер", ach7desc:"Купіце ўсе машыны",
+    ach8:"Экстрэмал", ach8desc:"Выйграйце на складанасці Экстрэм",
+    achLocked:"Заблакавана", achUnlocked:"Разблакавана!"
   }
 };
 
@@ -435,48 +507,38 @@ function setLanguage(l) {
   document.querySelectorAll('[data-lang]').forEach(el => el.classList.toggle('active', el.dataset.lang === l));
   applyLocale(); save();
 }
-function t(key) { return I18N[LANG][key] || key; }
+function t(key) { return (I18N[LANG] && I18N[LANG][key]) || key; }
 function applyLocale() {
   const ids = Object.keys(I18N.ru);
   ids.forEach(id => { const el = document.getElementById(id); if (el) el.textContent = t(id); });
   updateGarageUI();
+  renderAchievements();
 }
 
-// ======================= CAR DATA WITH REAL TEXTURES =======================
+// ======================= CAR DATA =======================
 const CAR_IMAGES = {
   supra:   'https://kimi-web-img.moonshot.cn/img/www.vhv.rs/e7f3af5093b0966c0e852693e98f7c9af966751a.png',
   skyline: 'https://kimi-web-img.moonshot.cn/img/www.pngitem.com/b3b8ae1681c238bd447a4ee503d77b6d5eb01884.png',
   mustang: 'https://kimi-web-img.moonshot.cn/img/assets.stickpng.com/7aa6e3d708266f638627aae501cb06ed204ffb28.png',
   lancer:  'https://kimi-web-img.moonshot.cn/img/static.tcimg.net/29d17bc0eca233e4513853086e8db3b1107410cc.png',
   camaro:  'https://kimi-web-img.moonshot.cn/img/p.kindpng.com/975cec27b45abf5b8dbb23a6f2b06b21999ac301.png',
-  porsche: 'https://kimi-web-img.moonshot.cn/img/images.porsche.com/7bb12729be8c2ff674ef3273fe9161b0a3fa71b9.png'
+  porsche: 'https://kimi-web-img.moonshot.cn/img/images.porsche.com/7bb12729be8c2ff674ef3273fe9161b0a3fa71b9.png',
+  ferrari: 'https://kimi-web-img.moonshot.cn/img/www.pngmart.com/5a1e2c3d4b5f6e7a8b9c0d1e2f3a4b5c.png',
+  bmw:     'https://kimi-web-img.moonshot.cn/img/www.pngmart.com/1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d.png',
+  silvia:  'https://kimi-web-img.moonshot.cn/img/www.pngmart.com/9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d.png'
 };
 
 const CARS = [
-  { id:0, brand:"Supra", model:"MK4", imgKey:"supra", basePower:280, baseWeight:1450, gears:5, grip:0.72, topSpeed:260 },
-  { id:1, brand:"Skyline", model:"R34", imgKey:"skyline", basePower:310, baseWeight:1540, gears:6, grip:0.78, topSpeed:275 },
-  { id:2, brand:"Mustang", model:"GT", imgKey:"mustang", basePower:450, baseWeight:1650, gears:6, grip:0.68, topSpeed:290 },
-  { id:3, brand:"Lancer", model:"Evo IX", imgKey:"lancer", basePower:320, baseWeight:1400, gears:5, grip:0.85, topSpeed:255 },
-  { id:4, brand:"Camaro", model:"ZL1", imgKey:"camaro", basePower:580, baseWeight:1700, gears:6, grip:0.70, topSpeed:305 },
-  { id:5, brand:"911", model:"Turbo S", imgKey:"porsche", basePower:520, baseWeight:1450, gears:7, grip:0.88, topSpeed:330 },
+  { id:0, brand:"Supra", model:"MK4", imgKey:"supra", basePower:280, baseWeight:1450, gears:5, grip:0.72, topSpeed:260, cost:0, unlocked:true },
+  { id:1, brand:"Skyline", model:"R34", imgKey:"skyline", basePower:310, baseWeight:1540, gears:6, grip:0.78, topSpeed:275, cost:8000, unlocked:false },
+  { id:2, brand:"Mustang", model:"GT", imgKey:"mustang", basePower:450, baseWeight:1650, gears:6, grip:0.68, topSpeed:290, cost:12000, unlocked:false },
+  { id:3, brand:"Lancer", model:"Evo IX", imgKey:"lancer", basePower:320, baseWeight:1400, gears:5, grip:0.85, topSpeed:255, cost:6000, unlocked:false },
+  { id:4, brand:"Camaro", model:"ZL1", imgKey:"camaro", basePower:580, baseWeight:1700, gears:6, grip:0.70, topSpeed:305, cost:15000, unlocked:false },
+  { id:5, brand:"911", model:"Turbo S", imgKey:"porsche", basePower:520, baseWeight:1450, gears:7, grip:0.88, topSpeed:330, cost:20000, unlocked:false },
+  { id:6, brand:"Ferrari", model:"F40", imgKey:"ferrari", basePower:478, baseWeight:1100, gears:5, grip:0.82, topSpeed:324, cost:25000, unlocked:false },
+  { id:7, brand:"BMW", model:"M3 E46", imgKey:"bmw", basePower:343, baseWeight:1570, gears:6, grip:0.80, topSpeed:280, cost:10000, unlocked:false },
+  { id:8, brand:"Silvia", model:"S15", imgKey:"silvia", basePower:250, baseWeight:1240, gears:5, grip:0.75, topSpeed:245, cost:5000, unlocked:false }
 ];
-
-// Preload images
-const carImgObjs = {};
-let imagesLoaded = 0, totalImages = 0;
-function preloadImages(cb) {
-  const keys = Object.keys(CAR_IMAGES);
-  totalImages = keys.length;
-  imagesLoaded = 0;
-  keys.forEach(key => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => { imagesLoaded++; if (imagesLoaded >= totalImages && cb) cb(); };
-    img.onerror = () => { imagesLoaded++; if (imagesLoaded >= totalImages && cb) cb(); };
-    img.src = CAR_IMAGES[key];
-    carImgObjs[key] = img;
-  });
-}
 
 const UPGRADES = {
   engine: { baseCost:1000, mult:1.6, max:5, powerMul:1.12, weightAdd:5 },
@@ -486,31 +548,46 @@ const UPGRADES = {
   nitro:  { baseCost:2000, mult:1.8, max:3, nitroMul:1.25, durationAdd:0.5 }
 };
 
+const ACHIEVEMENTS_DEF = [
+  { id:'first_win', icon:'🏆', key:'ach1', keyDesc:'ach1desc', condition:(s)=>s.stats.wins>=1 },
+  { id:'speed_300', icon:'💨', key:'ach2', keyDesc:'ach2desc', condition:(s)=>s.stats.maxSpeed>=300 },
+  { id:'react_02', icon:'⚡', key:'ach3', keyDesc:'ach3desc', condition:(s)=>s.stats.bestReaction<0.2 && s.stats.bestReaction>0 },
+  { id:'money_50k', icon:'💰', key:'ach4', keyDesc:'ach4desc', condition:(s)=>s.money>=50000 },
+  { id:'perfect_shifts', icon:'⚙️', key:'ach5', keyDesc:'ach5desc', condition:(s)=>s.stats.perfectShifts>=50 },
+  { id:'under_10s', icon:'🚀', key:'ach6', keyDesc:'ach6desc', condition:(s)=>s.stats.bestTime>0 && s.stats.bestTime<10 },
+  { id:'all_cars', icon:'🚗', key:'ach7', keyDesc:'ach7desc', condition:(s)=>CARS.every(c=>c.unlocked || (s.unlockedCars&&s.unlockedCars.includes(c.id))) },
+  { id:'extreme_win', icon:'🔥', key:'ach8', keyDesc:'ach8desc', condition:(s)=>s.stats.extremeWins>=1 }
+];
+
 let state = {
   money: 5000, carIndex: 0,
-  upgrades: {},
+  upgrades: {}, unlockedCars: [0],
+  stats: { wins:0, losses:0, falseStarts:0, bestTime:999, bestReaction:999, maxSpeed:0, perfectShifts:0, extremeWins:0, totalRaces:0 },
+  records: {}, // carId_diff -> time
+  achievements: {}, // id -> unlocked (bool)
   settings: { lang:'ru', location:'city', difficulty:'normal', graphics:'high', sound:true, vibration:false, brightness:100 }
 };
 
 CARS.forEach(c => { if (!state.upgrades[c.id]) state.upgrades[c.id] = { engine:0, trans:0, tire:0, weight:0, nitro:0 }; });
 
-function save() { try { localStorage.setItem('furu_drag_v5', JSON.stringify(state)); } catch(e){} }
+function save() { try { localStorage.setItem('furu_drag_v6', JSON.stringify(state)); } catch(e){} }
 function load() {
   try {
-    const raw = localStorage.getItem('furu_drag_v5');
+    const raw = localStorage.getItem('furu_drag_v6');
     if (raw) { const s = JSON.parse(raw); Object.assign(state, s); }
   } catch(e){}
+  if (!state.unlockedCars) state.unlockedCars = [0];
+  if (!state.stats) state.stats = { wins:0, losses:0, falseStarts:0, bestTime:999, bestReaction:999, maxSpeed:0, perfectShifts:0, extremeWins:0, totalRaces:0 };
+  if (!state.records) state.records = {};
+  if (!state.achievements) state.achievements = {};
+  CARS.forEach(c => { c.unlocked = state.unlockedCars.includes(c.id); });
   LANG = state.settings.lang || 'ru';
 }
 load();
 
-// ======================= DRAW CAR WITH TEXTURE =======================
-function drawCar(ctx, x, y, targetWidth, car, opts={}) {
-  const img = carImgObjs[car.imgKey];
-  if (!img || !img.complete) return;
-  const aspect = img.naturalWidth / img.naturalHeight;
-  const w = targetWidth;
-  const h = w / aspect;
+// ======================= PROCEDURAL CAR DRAWING (FALLBACK) =======================
+function drawProceduralCar(ctx, x, y, w, car, opts={}) {
+  const h = w * 0.45;
   const flip = opts.flip || false;
   ctx.save();
   ctx.translate(x, y);
@@ -520,23 +597,171 @@ function drawCar(ctx, x, y, targetWidth, car, opts={}) {
     ctx.fillStyle = 'rgba(0,0,0,0.4)';
     ctx.beginPath(); ctx.ellipse(0, h*0.45, w*0.5, 8, 0, 0, Math.PI*2); ctx.fill();
   }
-  // Nitro glow
-  if (opts.nitro) {
-    ctx.shadowColor = '#ff4400'; ctx.shadowBlur = 20;
-  }
-  ctx.drawImage(img, -w/2, -h/2, w, h);
-  ctx.shadowBlur = 0;
-  // Headlights beam
+  // Body color based on car id
+  const colors = ['#e74c3c','#3498db','#f39c12','#9b59b6','#1abc9c','#e67e22','#ff0000','#2980b9','#2ecc71'];
+  const col = colors[car.id % colors.length];
+  // Chassis
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(-w*0.45, -h*0.1);
+  ctx.lineTo(-w*0.42, -h*0.35);
+  ctx.lineTo(-w*0.25, -h*0.45);
+  ctx.lineTo(w*0.25, -h*0.45);
+  ctx.lineTo(w*0.42, -h*0.25);
+  ctx.lineTo(w*0.45, -h*0.05);
+  ctx.lineTo(w*0.42, h*0.15);
+  ctx.lineTo(-w*0.42, h*0.15);
+  ctx.closePath();
+  ctx.fill();
+  // Roof / cabin
+  ctx.fillStyle = '#111';
+  ctx.beginPath();
+  ctx.moveTo(-w*0.18, -h*0.15);
+  ctx.lineTo(-w*0.12, -h*0.38);
+  ctx.lineTo(w*0.18, -h*0.38);
+  ctx.lineTo(w*0.22, -h*0.15);
+  ctx.closePath();
+  ctx.fill();
+  // Windows
+  ctx.fillStyle = '#222';
+  ctx.beginPath(); ctx.moveTo(-w*0.15, -h*0.18); ctx.lineTo(-w*0.10, -h*0.35); ctx.lineTo(w*0.05, -h*0.35); ctx.lineTo(w*0.05, -h*0.18); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(w*0.08, -h*0.18); ctx.lineTo(w*0.10, -h*0.35); ctx.lineTo(w*0.18, -h*0.35); ctx.lineTo(w*0.20, -h*0.18); ctx.closePath(); ctx.fill();
+  // Wheels
+  ctx.fillStyle = '#0a0a0a';
+  ctx.beginPath(); ctx.arc(-w*0.28, h*0.18, h*0.22, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(w*0.28, h*0.18, h*0.22, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#333';
+  ctx.beginPath(); ctx.arc(-w*0.28, h*0.18, h*0.12, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(w*0.28, h*0.18, h*0.12, 0, Math.PI*2); ctx.fill();
+  // Headlights
   if (opts.lightsOn && !flip) {
+    ctx.fillStyle = '#ffeeaa';
+    ctx.beginPath(); ctx.ellipse(w*0.38, -h*0.08, w*0.04, h*0.08, 0, 0, Math.PI*2); ctx.fill();
     ctx.globalCompositeOperation = 'screen';
-    const bgrad = ctx.createLinearGradient(w*0.35, -h*0.1, w*0.8, -h*0.05);
-    bgrad.addColorStop(0, 'rgba(255,255,200,0.3)');
-    bgrad.addColorStop(1, 'rgba(255,255,200,0)');
+    const bgrad = ctx.createLinearGradient(w*0.35, -h*0.1, w*0.9, -h*0.05);
+    bgrad.addColorStop(0, 'rgba(255,255,200,0.3)'); bgrad.addColorStop(1, 'rgba(255,255,200,0)');
     ctx.fillStyle = bgrad;
     ctx.beginPath(); ctx.moveTo(w*0.35, -h*0.15); ctx.lineTo(w*0.9, -h*0.25); ctx.lineTo(w*0.9, h*0.1); ctx.lineTo(w*0.35, h*0.05); ctx.closePath(); ctx.fill();
     ctx.globalCompositeOperation = 'source-over';
   }
+  // Taillights
+  if (opts.lightsOn && flip) {
+    ctx.fillStyle = '#ff0000';
+    ctx.beginPath(); ctx.ellipse(-w*0.40, -h*0.05, w*0.03, h*0.06, 0, 0, Math.PI*2); ctx.fill();
+  }
+  // Nitro glow
+  if (opts.nitro) {
+    ctx.shadowColor = '#ff4400'; ctx.shadowBlur = 20;
+    ctx.fillStyle = '#ff6600';
+    ctx.beginPath(); ctx.moveTo(-w*0.45, h*0.05); ctx.lineTo(-w*0.6, h*0.0); ctx.lineTo(-w*0.45, -h*0.05); ctx.closePath(); ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  // Brand text
+  ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.max(10, w*0.08)}px Orbitron`; ctx.textAlign = 'center';
+  ctx.fillText(car.brand.toUpperCase(), 0, -h*0.22);
   ctx.restore();
+}
+
+// ======================= DRAW CAR WITH TEXTURE =======================
+let useProcedural = false;
+const carImgObjs = {};
+let imagesLoaded = 0, totalImages = 0;
+let preloadFinished = false;
+
+function preloadImages(cb) {
+  const keys = Object.keys(CAR_IMAGES);
+  totalImages = keys.length;
+  imagesLoaded = 0;
+  let timeout = setTimeout(() => {
+    if (!preloadFinished) { useProcedural = true; preloadFinished = true; if (cb) cb(); }
+  }, 3000);
+  keys.forEach(key => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { imagesLoaded++; carImgObjs[key] = img; if (imagesLoaded >= totalImages) { clearTimeout(timeout); preloadFinished = true; if (cb) cb(); } };
+    img.onerror = () => { imagesLoaded++; if (imagesLoaded >= totalImages) { clearTimeout(timeout); preloadFinished = true; if (cb) cb(); } };
+    img.src = CAR_IMAGES[key];
+  });
+}
+
+function drawCar(ctx, x, y, targetWidth, car, opts={}) {
+  const img = carImgObjs[car.imgKey];
+  if (!useProcedural && img && img.complete && img.naturalWidth > 0) {
+    const aspect = img.naturalWidth / img.naturalHeight;
+    const w = targetWidth;
+    const h = w / aspect;
+    const flip = opts.flip || false;
+    ctx.save();
+    ctx.translate(x, y);
+    if (flip) ctx.scale(-1, 1);
+    if (opts.shadow !== false) {
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath(); ctx.ellipse(0, h*0.45, w*0.5, 8, 0, 0, Math.PI*2); ctx.fill();
+    }
+    if (opts.nitro) { ctx.shadowColor = '#ff4400'; ctx.shadowBlur = 20; }
+    ctx.drawImage(img, -w/2, -h/2, w, h);
+    ctx.shadowBlur = 0;
+    if (opts.lightsOn && !flip) {
+      ctx.globalCompositeOperation = 'screen';
+      const bgrad = ctx.createLinearGradient(w*0.35, -h*0.1, w*0.8, -h*0.05);
+      bgrad.addColorStop(0, 'rgba(255,255,200,0.3)'); bgrad.addColorStop(1, 'rgba(255,255,200,0)');
+      ctx.fillStyle = bgrad;
+      ctx.beginPath(); ctx.moveTo(w*0.35, -h*0.15); ctx.lineTo(w*0.9, -h*0.25); ctx.lineTo(w*0.9, h*0.1); ctx.lineTo(w*0.35, h*0.05); ctx.closePath(); ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    ctx.restore();
+  } else {
+    drawProceduralCar(ctx, x, y, targetWidth, car, opts);
+  }
+}
+
+// ======================= AUDIO ENGINE =======================
+let audioCtx = null;
+function ensureAudio() {
+  if (!state.settings.sound) return null;
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playTone(freq, duration, type='square', vol=0.1) {
+  const ctx = ensureAudio(); if (!ctx) return;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  gain.gain.setValueAtTime(vol, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(); osc.stop(ctx.currentTime + duration);
+}
+function playEngineSound(rpm) {
+  const ctx = ensureAudio(); if (!ctx) return;
+  // Simple engine rumble using low-frequency noise simulation
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sawtooth';
+  osc.frequency.value = 60 + (rpm / 8500) * 120;
+  gain.gain.value = 0.03 + (rpm / 8500) * 0.04;
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.start(); osc.stop(ctx.currentTime + 0.05);
+}
+function playShiftSound() {
+  playTone(400, 0.1, 'square', 0.08);
+  setTimeout(() => playTone(600, 0.08, 'square', 0.06), 50);
+}
+function playNitroSound() {
+  playTone(200, 0.3, 'sawtooth', 0.12);
+  setTimeout(() => playTone(300, 0.3, 'sawtooth', 0.1), 100);
+}
+function playWinSound() {
+  [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,0.2,'sine',0.1),i*150));
+}
+function playLoseSound() {
+  [400,350,300].forEach((f,i)=>setTimeout(()=>playTone(f,0.3,'sawtooth',0.08),i*200));
+}
+function playCountdownSound() {
+  playTone(800, 0.15, 'square', 0.08);
+}
+function playGoSound() {
+  playTone(1200, 0.3, 'square', 0.12);
 }
 
 // ======================= MENU BACKGROUND =======================
@@ -581,6 +806,50 @@ function drawMenuBg() {
   requestAnimationFrame(drawMenuBg);
 }
 
+// ======================= ACHIEVEMENTS =======================
+function checkAchievements() {
+  let newUnlock = false;
+  ACHIEVEMENTS_DEF.forEach(ach => {
+    const already = state.achievements[ach.id];
+    if (!already && ach.condition(state)) {
+      state.achievements[ach.id] = true;
+      newUnlock = true;
+      showToast(`🏆 ${t(ach.key)} — ${t('achUnlocked')}`);
+    }
+  });
+  if (newUnlock) save();
+}
+function openAchievements() {
+  switchScreen('achievementsOverlay');
+  renderAchievements();
+}
+function hideAchievements() { document.getElementById('achievementsOverlay').classList.remove('active'); }
+function renderAchievements() {
+  const list = document.getElementById('achList');
+  list.innerHTML = '';
+  ACHIEVEMENTS_DEF.forEach(ach => {
+    const unlocked = !!state.achievements[ach.id];
+    const div = document.createElement('div');
+    div.className = 'ach-item' + (unlocked ? ' unlocked' : '');
+    div.innerHTML = `
+      <div class="ach-icon">${ach.icon}</div>
+      <div class="ach-info">
+        <div class="ach-name">${t(ach.key)}</div>
+        <div class="ach-desc">${t(ach.keyDesc)}</div>
+      </div>
+      <div class="ach-status">${unlocked ? '✅ ' + t('achUnlocked') : '🔒 ' + t('achLocked')}</div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// ======================= TOAST =======================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
 // ======================= GARAGE =======================
 const garageCanvas = document.getElementById('garageCanvas');
 const garageCtx = garageCanvas.getContext('2d');
@@ -608,12 +877,24 @@ function drawGarage() {
 function updateGarageUI() {
   const car = CARS[state.carIndex];
   const ups = state.upgrades[car.id];
+  const owned = car.unlocked || state.unlockedCars.includes(car.id);
   document.getElementById('statPower').textContent = Math.round(getCarPower(car));
   document.getElementById('statWeight').textContent = Math.round(getCarWeight(car));
   document.getElementById('statGears').textContent = car.gears;
   document.getElementById('statAccel').textContent = calc0to100(car).toFixed(1);
   document.getElementById('statTopSpeed').textContent = Math.round(getCarTopSpeed(car));
   document.getElementById('statGrip').textContent = Math.round(getCarGrip(car)*100)+'%';
+
+  const buySection = document.getElementById('buySection');
+  const buyBtn = document.getElementById('buyBtn');
+  if (!owned) {
+    buySection.style.display = 'block';
+    buyBtn.textContent = `${t('buyCar')} — ${car.cost}💰`;
+    buyBtn.disabled = state.money < car.cost;
+  } else {
+    buySection.style.display = 'none';
+  }
+
   ['engine','trans','tire','weight','nitro'].forEach(type => {
     const lvl = ups[type] || 0;
     const max = UPGRADES[type].max;
@@ -622,20 +903,39 @@ function updateGarageUI() {
     dots.innerHTML = '';
     for (let i=0;i<max;i++) { const d = document.createElement('div'); d.className = 'level-bar' + (i<lvl?' active':''); dots.appendChild(d); }
     const btn = document.getElementById(type+'Btn');
-    if (lvl >= max) { btn.textContent = 'MAX'; btn.disabled = true; }
-    else { btn.textContent = `${t('upgradeImpr')} — ${cost}${t('upgradeCost')}`; btn.disabled = state.money < cost; }
+    if (!owned) { btn.style.display = 'none'; }
+    else {
+      btn.style.display = 'block';
+      if (lvl >= max) { btn.textContent = 'MAX'; btn.disabled = true; }
+      else { btn.textContent = `${t('upgradeImpr')} — ${cost}${t('upgradeCost')}`; btn.disabled = state.money < cost; }
+    }
   });
   document.getElementById('menuMoney').textContent = state.money;
   document.getElementById('garageMoney').textContent = state.money;
   const sel = document.getElementById('carSelector');
   sel.innerHTML = '';
   CARS.forEach((c,i) => {
+    const isUnlocked = c.unlocked || state.unlockedCars.includes(c.id);
     const thumb = document.createElement('div');
-    thumb.className = 'car-thumb' + (i===state.carIndex?' active':'');
-    thumb.innerHTML = `<div class="thumb-brand">${c.brand}</div><div class="thumb-model">${c.model}</div>`;
+    thumb.className = 'car-thumb' + (i===state.carIndex?' active':'') + (!isUnlocked?' locked':'');
+    thumb.innerHTML = `<div class="thumb-brand">${c.brand}</div><div class="thumb-model">${c.model}</div>${!isUnlocked?'<div class="thumb-lock">🔒</div>':''}`;
     thumb.onclick = () => { state.carIndex = i; updateGarageUI(); };
     sel.appendChild(thumb);
   });
+}
+
+function buyCar() {
+  const car = CARS[state.carIndex];
+  if (car.unlocked || state.unlockedCars.includes(car.id)) return;
+  if (state.money >= car.cost) {
+    state.money -= car.cost;
+    car.unlocked = true;
+    state.unlockedCars.push(car.id);
+    save();
+    updateGarageUI();
+    showToast(`${car.brand} ${car.model} ${t('achUnlocked')}`);
+    checkAchievements();
+  }
 }
 
 function getCarPower(c) { const u = state.upgrades[c.id]; return c.basePower * Math.pow(UPGRADES.engine.powerMul, u.engine||0); }
@@ -646,6 +946,7 @@ function calc0to100(c) { const p = getCarPower(c), w = getCarWeight(c), g = getC
 
 function upgrade(type) {
   const car = CARS[state.carIndex];
+  if (!car.unlocked && !state.unlockedCars.includes(car.id)) return;
   const u = state.upgrades[car.id];
   const lvl = u[type] || 0;
   if (lvl >= UPGRADES[type].max) return;
@@ -669,11 +970,13 @@ const PRIZES = { easy:500, normal:1000, hard:1800, extreme:3000 };
 const GEAR_RATIOS = [0, 3.8, 2.3, 1.6, 1.15, 0.87, 0.68, 0.55];
 
 function startRace() {
+  const car = CARS[state.carIndex];
+  if (!car.unlocked && !state.unlockedCars.includes(car.id)) {
+    showToast(t('buyLocked')); return;
+  }
   switchScreen('raceScreen');
   resizeRace();
-  const car = CARS[state.carIndex];
   const diff = state.settings.difficulty;
-  // Pick opponent car (different from player if possible)
   let oppCarIdx = Math.floor(Math.random() * CARS.length);
   if (oppCarIdx === state.carIndex && CARS.length > 1) oppCarIdx = (oppCarIdx + 1) % CARS.length;
   const oppCar = CARS[oppCarIdx];
@@ -681,7 +984,7 @@ function startRace() {
   raceState = {
     phase: 'ready',
     countdown: 3, countTime: 0,
-    player: { x: 0, v: 0, rpm: 1000, gear: 0, dist: 0, reaction: 0, shiftBonus: 0, nitroActive: false, nitroTime: 0, bestGear:0, finished:false },
+    player: { x: 0, v: 0, rpm: 1000, gear: 0, dist: 0, reaction: 0, shiftBonus: 0, nitroActive: false, nitroTime: 0, bestGear:0, finished:false, perfectShifts:0 },
     opponent: { x: 0, v: 0, dist: 0, time: 0, finished:false, car: oppCar, gear:0, rpm:1000, nitroActive:false, nitroTime:0 },
     oppStats: {
       power: (oppCar.basePower * diffMult),
@@ -691,13 +994,14 @@ function startRace() {
       gears: oppCar.gears
     },
     startTime: 0, finishTime: 0, falseStart: false,
-    particles: [], cameraX: 0,
+    particles: [], sparks: [], cameraX: 0,
     car: car
   };
   document.getElementById('resultsOverlay').classList.remove('active');
   document.getElementById('launchBtn').classList.remove('disabled');
   document.getElementById('shiftBtn').classList.add('disabled');
-  document.getElementById('nitroBtnRace').disabled = (state.upgrades[car.id].nitro||0) === 0;
+  const nitroLvl = state.upgrades[car.id].nitro || 0;
+  document.getElementById('nitroBtnRace').disabled = nitroLvl === 0;
   document.getElementById('nitroBtnRace').classList.remove('active');
   document.getElementById('gearNum').textContent = 'N';
   document.getElementById('speedValue').textContent = '0';
@@ -722,6 +1026,7 @@ function launch() {
   document.getElementById('shiftBtn').classList.remove('disabled');
   raceState.player.gear = 1;
   document.getElementById('gearNum').textContent = '1';
+  playGoSound();
 }
 
 function shiftGear() {
@@ -730,7 +1035,15 @@ function shiftGear() {
   const car = raceState.car;
   if (p.gear >= car.gears) return;
   const perfectMin = 6200, perfectMax = 7800;
-  if (p.rpm >= perfectMin && p.rpm <= perfectMax) { p.shiftBonus = Math.min(0.4, p.shiftBonus + 0.08); }
+  const isPerfect = p.rpm >= perfectMin && p.rpm <= perfectMax;
+  if (isPerfect) {
+    p.shiftBonus = Math.min(0.4, p.shiftBonus + UPGRADES.trans.shiftBonus);
+    p.perfectShifts++;
+    state.stats.perfectShifts++;
+    // Spark effect
+    raceState.sparks.push({ x: p.dist, y: 40, life: 1.0, vx: -2, vy: -3 });
+    playShiftSound();
+  }
   p.gear++;
   p.rpm = 3500 + Math.random()*600;
   if (p.gear > p.bestGear) p.bestGear = p.gear;
@@ -746,6 +1059,7 @@ function useNitro() {
     p.nitroActive = true;
     p.nitroTime = (2 + nitroLvl*UPGRADES.nitro.durationAdd) * 1000;
     document.getElementById('nitroBtnRace').classList.add('active');
+    playNitroSound();
     if (state.settings.vibration && navigator.vibrate) navigator.vibrate([50,30,50]);
   }
 }
@@ -764,7 +1078,9 @@ function raceLoop() {
     raceState.countTime = now + 1500 + Math.random()*2000;
   }
   if (raceState.phase === 'countdown') {
+    const prevCd = raceState.countdown;
     raceState.countdown = Math.max(0, Math.ceil((raceState.countTime - now)/1000));
+    if (prevCd !== raceState.countdown && raceState.countdown > 0) playCountdownSound();
   }
 
   if (raceState.phase === 'racing') {
@@ -801,6 +1117,12 @@ function raceLoop() {
     p.v = Math.min(p.v, maxSpd);
     p.dist += p.v * dt;
 
+    // Track max speed stat
+    if (p.v > state.stats.maxSpeed) state.stats.maxSpeed = Math.round(p.v);
+
+    // Sound engine
+    if (state.settings.sound && p.gear > 0 && Math.random() < 0.3) playEngineSound(p.rpm);
+
     // Opponent AI
     const o = raceState.opponent;
     if (!o.finished) {
@@ -809,17 +1131,14 @@ function raceLoop() {
       const oWeight = raceState.oppStats.weight;
       const oGrip = raceState.oppStats.grip;
       const oMax = raceState.oppStats.topSpeed;
-      // AI gear logic
       const oRatio = GEAR_RATIOS[o.gear] || 0.5;
       const oWheelRPM = o.v * 60 / (2 * Math.PI * 0.33);
       o.rpm = Math.max(1000, oWheelRPM * oRatio * 12 + (o.v < 5 ? 2500 : 0));
-      // AI shift
       if (o.rpm > 7200 && o.gear < oCar.gears) { o.gear++; o.rpm = 3800; }
       if (o.gear === 0) o.gear = 1;
       const oSpdFactor = Math.max(0.15, 1 - (o.v / oMax));
       let oAccel = ((oPower*735.5)/oWeight) * oGrip * oSpdFactor * 0.085;
       if (o.v < 30) oAccel *= 1.35;
-      // AI nitro usage
       if (!o.nitroActive && o.dist > 50 && o.dist < 300 && Math.random() < 0.02) {
         o.nitroActive = true; o.nitroTime = 2500;
       }
@@ -851,7 +1170,6 @@ function raceLoop() {
     document.getElementById('raceDist').textContent = Math.min(RACE_DIST, Math.round(p.dist)) + ' ' + t('raceDistM');
     document.getElementById('hudRPM').textContent = Math.round(p.rpm);
     document.getElementById('speedValue').textContent = Math.round(p.v);
-    const o = raceState.opponent;
     const distDiff = p.dist - o.dist;
     let oppText = '';
     if (Math.abs(distDiff) < 5) oppText = '↔';
@@ -874,6 +1192,10 @@ function raceLoop() {
     raceState.particles.forEach(pt => { pt.x += pt.vx*dt; pt.y += pt.vy*dt; pt.life -= dt*1.5; });
     raceState.particles = raceState.particles.filter(p => p.life > 0);
 
+    // Sparks
+    raceState.sparks.forEach(sp => { sp.x += sp.vx*dt; sp.y += sp.vy*dt; sp.life -= dt*3; });
+    raceState.sparks = raceState.sparks.filter(s => s.life > 0);
+
     // Camera follows leader or player
     const leaderDist = Math.max(p.dist, o.dist);
     raceState.cameraX = leaderDist - raceW*0.3;
@@ -885,8 +1207,8 @@ function raceLoop() {
   ctx.clearRect(0,0,raceW,raceH);
   const cam = raceState.cameraX;
   const groundY = raceH * 0.72;
-  const lane1Y = groundY - 25; // player lane
-  const lane2Y = groundY + 5;  // opponent lane
+  const lane1Y = groundY - 25;
+  const lane2Y = groundY + 5;
 
   // Sky & background
   const loc = state.settings.location;
@@ -973,6 +1295,12 @@ function raceLoop() {
   const pScreenX = p.dist - cam;
   drawCar(ctx, pScreenX, lane1Y, 140, raceState.car, { lightsOn:true, nitro:p.nitroActive, shadow:true });
 
+  // Tire marks (player)
+  if (isHigh && p.v > 20 && p.gear === 1) {
+    ctx.fillStyle = 'rgba(30,30,30,0.3)';
+    ctx.fillRect(pScreenX - 10, lane1Y + 25, 20, 4);
+  }
+
   // Particles
   raceState.particles.forEach(pt => {
     const px = pt.x - cam;
@@ -988,6 +1316,17 @@ function raceLoop() {
         ctx.beginPath(); ctx.arc(px, lane1Y-pt.y, pt.size*pt.life*0.5, 0, Math.PI*2); ctx.fill();
       }
     }
+    ctx.globalAlpha = 1;
+  });
+
+  // Sparks
+  raceState.sparks.forEach(sp => {
+    const px = sp.x - cam;
+    ctx.globalAlpha = sp.life;
+    ctx.fillStyle = '#ffaa00';
+    ctx.beginPath(); ctx.arc(px, lane1Y-sp.y, 3*sp.life, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(px+1, lane1Y-sp.y-1, 1.5*sp.life, 0, Math.PI*2); ctx.fill();
     ctx.globalAlpha = 1;
   });
 
@@ -1058,6 +1397,7 @@ function showResults() {
     document.getElementById('resultReaction').textContent = '—';
     document.getElementById('resultBestGear').textContent = '—';
     document.getElementById('resultPrize').textContent = '0💰';
+    state.stats.falseStarts++;
   } else {
     const pTime = rs.finishTime;
     const oTime = o.time || 999;
@@ -1073,7 +1413,22 @@ function showResults() {
     state.money += prize; save();
     document.getElementById('resultPrize').textContent = (won?'+':'') + prize + '💰';
     document.getElementById('menuMoney').textContent = state.money;
+
+    // Stats
+    state.stats.totalRaces++;
+    if (won) state.stats.wins++; else state.stats.losses++;
+    if (p.reaction < state.stats.bestReaction) state.stats.bestReaction = p.reaction;
+    if (pTime < state.stats.bestTime) state.stats.bestTime = pTime;
+    if (diff === 'extreme' && won) state.stats.extremeWins++;
+
+    // Records
+    const recKey = state.carIndex + '_' + diff;
+    if (!state.records[recKey] || pTime < state.records[recKey]) state.records[recKey] = pTime;
+
+    if (won) playWinSound(); else playLoseSound();
   }
+  save();
+  checkAchievements();
 }
 
 // ======================= SETTINGS =======================
@@ -1161,7 +1516,7 @@ function hideTutorial() { document.getElementById('tutorialOverlay').classList.r
 
 // ======================= NAVIGATION =======================
 function switchScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen, .tut-overlay, .ach-overlay, .results-overlay').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 function backToMenu() {
@@ -1183,6 +1538,7 @@ preloadImages(() => {
   document.getElementById('loadingOverlay').classList.add('hidden');
   applyLocale();
   document.getElementById('menuMoney').textContent = state.money;
+  document.body.style.filter = `brightness(${state.settings.brightness}%)`;
   drawMenuBg();
 });
 </script>
